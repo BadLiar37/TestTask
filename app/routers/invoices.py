@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.dto.response import ResponseDTO
+from app.dto.invoice_response import InvoiceResponseDTO
 from app.services.invoice_manager import InvoiceManager
 from app.exceptions.exceptions import NoContentException
 from app.core.helpers import common_parameters, get_db, filter_params
@@ -17,7 +17,7 @@ async def get_invoices(
     db: Session = Depends(get_db),
     params: dict = Depends(common_parameters),
     filters: dict = Depends(filter_params)
-) -> ResponseDTO:
+) -> InvoiceResponseDTO:
     invoices = await repository.get_items(db, **params)
     if not invoices:
         raise NoContentException

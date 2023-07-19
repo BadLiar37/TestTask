@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from app.dto.invoice_line import InvoiceLineDTO
-from app.dto.response import ResponseDTO
+from app.dto.invoice_response import InvoiceResponseDTO
 from app.models.models import InvoiceLine
 from app.dao.invoice import InvoiceDAO
 from app.dto.invoice import InvoiceDTO
@@ -11,7 +11,7 @@ class InvoiceManager:
     @staticmethod
     async def convert_invoice_model_to_response_dto(
             invoices: list[InvoiceDAO], lte: int, gte: int
-    ) -> ResponseDTO:
+    ) -> InvoiceResponseDTO:
         response_invoices: list[InvoiceDTO] = []
         total_list: list[Decimal] = []
         for invoice in invoices:
@@ -27,7 +27,7 @@ class InvoiceManager:
             if gte <= response_invoice.total < lte or lte == 0 and gte <= response_invoice.total:
                 response_invoices.append(response_invoice)
                 total_list.append(response_invoice.total)
-        response_invoice_schema = ResponseDTO(
+        response_invoice_schema = InvoiceResponseDTO(
             invoices=response_invoices,
             invoices_count=len(response_invoices),
             invoices_total=sum(total_list)
