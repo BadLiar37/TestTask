@@ -4,6 +4,9 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
+    """
+    Settings class
+    """
 
     sqlalchemy_database_url: str
 

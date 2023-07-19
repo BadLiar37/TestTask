@@ -2,16 +2,26 @@ from decimal import Decimal
 
 from app.dto.invoice_line import InvoiceLineDTO
 from app.dto.invoice_response import InvoiceResponseDTO
-from app.models.models import InvoiceLine
+from app.models.invoice_line import InvoiceLine
 from app.dao.invoice import InvoiceDAO
 from app.dto.invoice import InvoiceDTO
 
 
 class InvoiceManager:
+    """
+    Manager for converting data to a specific dto
+    """
     @staticmethod
     async def convert_invoice_model_to_response_dto(
             invoices: list[InvoiceDAO], lte: int, gte: int
     ) -> InvoiceResponseDTO:
+        """
+        Convert Invoice model from database to specific DTO response
+        :param invoices:
+        :param lte:
+        :param gte:
+        :return: InvoiceResponseDTO
+        """
         response_invoices: list[InvoiceDTO] = []
         total_list: list[Decimal] = []
         for invoice in invoices:
@@ -40,6 +50,12 @@ class InvoiceManager:
             invoice_lines: list[InvoiceLine],
             discount: Decimal
     ) -> tuple[list[InvoiceLineDTO], list[int], list[Decimal]]:
+        """
+        Convert InvoiceLines from database to InvoiceLineDTO
+        :param invoice_lines:
+        :param discount:
+        :return: tuple[list[InvoiceLineDTO], list[int], list[Decimal]]
+        """
         response_invoice_lines: list[InvoiceLineDTO] = []
         subtotal_line_list: list[int] = []
         total_line_list: list[Decimal] = []
@@ -67,6 +83,14 @@ class InvoiceManager:
             subtotal_line_list: list[int],
             total_line_list: list[Decimal]
     ) -> InvoiceDTO:
+        """
+        Convert Invoice model from database to InvoiceDTO
+        :param invoice:
+        :param response_invoice_lines:
+        :param subtotal_line_list:
+        :param total_line_list:
+        :return: InvoiceDTO
+        """
         response_invoice = InvoiceDTO(
             title=invoice.title,
             subtotal=sum(subtotal_line_list),
