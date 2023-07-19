@@ -9,7 +9,7 @@ class BaseInvoiceLine(BaseModel):
     price_per_one: Decimal
 
 
-class InvoiceLine(BaseInvoiceLine):
+class InvoiceLineDAO(BaseInvoiceLine):
     id: int
 
     class Config:

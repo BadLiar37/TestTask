@@ -1,17 +1,17 @@
 from pydantic import BaseModel
 from decimal import Decimal
 
-from app.dtos.invoice_line import InvoiceLine
+from app.dao.invoice_line import InvoiceLineDAO
 
 
 class BaseInvoice(BaseModel):
     title: str
 
 
-class Invoice(BaseInvoice):
+class InvoiceDAO(BaseInvoice):
     id: int
     discount: Decimal
-    invoice_lines: list[InvoiceLine]
+    invoice_lines: list[InvoiceLineDAO]
 
     class Config:
         from_attributes = True

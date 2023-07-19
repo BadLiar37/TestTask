@@ -1,14 +1,16 @@
 from decimal import Decimal
 
+from app.dto.invoice_line import InvoiceLineDTO
+from app.dto.response import ResponseDTO
 from app.models.models import InvoiceLine
-from app.dtos.invoice import Invoice
-from app.dtos.dtos import InvoiceLineDTO, ResponseDTO, InvoiceDTO
+from app.dao.invoice import InvoiceDAO
+from app.dto.invoice import InvoiceDTO
 
 
 class InvoiceManager:
     @staticmethod
     async def convert_invoice_model_to_response_dto(
-            invoices: list[Invoice], lte: int, gte: int
+            invoices: list[InvoiceDAO], lte: int, gte: int
     ) -> ResponseDTO:
         response_invoices: list[InvoiceDTO] = []
         total_list: list[Decimal] = []
@@ -60,7 +62,7 @@ class InvoiceManager:
 
     @staticmethod
     async def convert_invoice_to_dto(
-            invoice: Invoice,
+            invoice: InvoiceDAO,
             response_invoice_lines: list[InvoiceLineDTO],
             subtotal_line_list: list[int],
             total_line_list: list[Decimal]

@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.dto.response import ResponseDTO
 from app.services.invoice_manager import InvoiceManager
 from app.exceptions.exceptions import NoContentException
 from app.core.helpers import common_parameters, get_db, filter_params
 from app.models.models import Invoice
-from app.dtos.dtos import ResponseDTO
 from app.repository.invoice_repository import InvoiceRepository
 
 router = APIRouter()
