@@ -3,7 +3,6 @@ from typing import TypeVar, Generic
 from sqlalchemy.orm import Session
 
 from app.exceptions.exceptions import PaginationException
-from app.models.models import Invoice
 
 T = TypeVar("T")
 
