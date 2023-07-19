@@ -1,31 +1,31 @@
 from decimal import Decimal
 
 from app.models.models import InvoiceLine
-from app.schemas.invoice import Invoice
-from app.schemas.response_schemas import ResponseInvoiceLine, ResponseInvoiceSchema, ResponseInvoice
+from app.dtos.invoice import Invoice
+from app.dtos.dtos import InvoiceLineDTO, ResponseDTO, InvoiceDTO
 
 
-class Converter:
+class InvoiceManager:
     @staticmethod
-    async def convert_invoice_model_to_response_schema(
+    async def convert_invoice_model_to_response_dto(
             invoices: list[Invoice], lte: int, gte: int
-    ) -> ResponseInvoiceSchema:
-        response_invoices: list[ResponseInvoice] = []
+    ) -> ResponseDTO:
+        response_invoices: list[InvoiceDTO] = []
         total_list: list[Decimal] = []
         for invoice in invoices:
             response_invoice_lines, subtotal_line_list, total_line_list = (
-                await Converter.convert_invoice_line_to_response_invoice_line(
+                await InvoiceManager.convert_invoice_line_dto(
                     invoice.invoice_lines, invoice.discount
                 )
             )
-            response_invoice = await Converter.convert_invoice_to_response_invoice(
+            response_invoice = await InvoiceManager.convert_invoice_to_dto(
                 invoice, response_invoice_lines,
                 subtotal_line_list, total_line_list
             )
             if gte <= response_invoice.total < lte or lte == 0 and gte <= response_invoice.total:
                 response_invoices.append(response_invoice)
                 total_list.append(response_invoice.total)
-        response_invoice_schema = ResponseInvoiceSchema(
+        response_invoice_schema = ResponseDTO(
             invoices=response_invoices,
             invoices_count=len(response_invoices),
             invoices_total=sum(total_list)
@@ -34,18 +34,18 @@ class Converter:
         return response_invoice_schema
 
     @staticmethod
-    async def convert_invoice_line_to_response_invoice_line(
+    async def convert_invoice_line_dto(
             invoice_lines: list[InvoiceLine],
             discount: Decimal
-    ) -> tuple[list[ResponseInvoiceLine], list[int], list[Decimal]]:
-        response_invoice_lines: list[ResponseInvoiceLine] = []
+    ) -> tuple[list[InvoiceLineDTO], list[int], list[Decimal]]:
+        response_invoice_lines: list[InvoiceLineDTO] = []
         subtotal_line_list: list[int] = []
         total_line_list: list[Decimal] = []
 
         for invoice_line in invoice_lines:
             subtotal_line = invoice_line.quantity * invoice_line.price_per_one
             total_line = subtotal_line * (1 - discount / 100)
-            response_invoice_line = ResponseInvoiceLine(
+            response_invoice_line = InvoiceLineDTO(
                 title=invoice_line.title,
                 quantity=invoice_line.quantity,
                 price_per_one=invoice_line.price_per_one,
@@ -59,13 +59,13 @@ class Converter:
         return response_invoice_lines, subtotal_line_list, total_line_list
 
     @staticmethod
-    async def convert_invoice_to_response_invoice(
+    async def convert_invoice_to_dto(
             invoice: Invoice,
-            response_invoice_lines: list[ResponseInvoiceLine],
+            response_invoice_lines: list[InvoiceLineDTO],
             subtotal_line_list: list[int],
             total_line_list: list[Decimal]
-    ) -> ResponseInvoice:
-        response_invoice = ResponseInvoice(
+    ) -> InvoiceDTO:
+        response_invoice = InvoiceDTO(
             title=invoice.title,
             subtotal=sum(subtotal_line_list),
             total=sum(total_line_list),

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from decimal import Decimal
 
-from app.schemas.invoice_line import InvoiceLine
+from app.dtos.invoice_line import InvoiceLine
 
 
 class BaseInvoice(BaseModel):
